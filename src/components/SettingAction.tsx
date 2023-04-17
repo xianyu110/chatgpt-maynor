@@ -283,7 +283,7 @@ async function exportFile(messages: ChatMessage[]) {
     })
     .join("\n\n\n\n")
   
-  const defaultPath = path.join(__dirname, "E:/Downloads/chatgpt/chat.md")
+  const defaultPath = path.join(__dirname, "chat.md")
   await fs.promises.writeFile(defaultPath, markdownText)
   await copyToClipboard(markdownText)
 }
