@@ -176,6 +176,19 @@ export default function SettingAction(props: {
                 : "i-ri:markdown-line"
             }
           />
+                  <ActionItem
+          label="导出到本地"
+          onClick={async () => {
+            await exportFile(props.messaages)
+            setCopied(true)
+            setTimeout(() => setCopied(false), 1000)
+          }}
+          icon={
+            copied()
+              ? "i-ri:check-fill dark:text-yellow text-yellow-6"
+              : "i-ri:download-line"
+          }
+        />
           <ActionItem
             onClick={props.clear}
             icon="i-carbon:trash-can"
@@ -256,4 +269,21 @@ async function exportMD(messages: ChatMessage[]) {
       })
       .join("\n\n\n\n")
   )
+}
+async function exportFile(messages: ChatMessage[]) {
+  const role = {
+    system: "系统",
+    user: "我",
+    assistant: "ChatGPT",
+    error: "错误"
+  }
+  const markdownText = messages
+    .map(k => {
+      return `### ${role[k.role]}\n\n${k.content.trim()}`
+    })
+    .join("\n\n\n\n")
+  
+  const defaultPath = path.join(__dirname, "E:/Downloads/chatgpt/chat.md")
+  await fs.promises.writeFile(defaultPath, markdownText)
+  await copyToClipboard(markdownText)
 }
